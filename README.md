@@ -1,5 +1,51 @@
 # todo_sync
 
+## List CRUD
+
+```dart
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:todo_sync/models/todo_model.dart';
+
+part 'todo_list_provider.g.dart';
+
+@riverpod
+class TodoList extends _$TodoList {
+  @override
+  List<Todo> build() {
+    return [
+      const Todo(id: '1', desc: 'Clean the room'),
+      const Todo(id: '2', desc: 'Wash the dish'),
+      const Todo(id: '3', desc: 'Do homework'),
+    ];
+  }
+
+  void addTodo({required String desc}) {
+    state = [...state, Todo.add(desc: desc)];
+  }
+
+  void editTodo(String id, String desc) {
+    state = [
+      for (final todo in state)
+        if (todo.id == id) todo.copyWith(desc: desc) else todo
+    ];
+  }
+
+  void toggleTodo(String id) {
+    state = [
+      for (final todo in state)
+        if (todo.id == id) todo.copyWith(completed: !todo.completed) else todo
+    ];
+  }
+
+  void removeTodo(String id) {
+    state = [
+      for (final todo in state)
+        if (todo.id != id) todo
+    ];
+  }
+}
+```
+
 ## Filter
 
 - enum을 사용하여 범주를 만들고 switch 구문을 사용하면 모든 범주에 대해 구현하지 않으면 에러가 발생하여 개발시 실수를 방지 한다.
